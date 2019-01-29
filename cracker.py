@@ -58,20 +58,24 @@ def isPar(nmr):
 def bruteforce(passwordlist):
 	#LerArquiov
 	fd = open(passwordlist, 'r')
-
 	#Salvar num array
 	passwords = fd.readlines()
+	#get size do array
+	qtdElementosNaLista = len(passwords)
 
-    #get size do array
-    qtdElementosNaLista =  len(passwords)
+	print ()
+	print ("==========================[Começando]==========================")
+	print ()
 	
-	divisores = list(divisores(qtdElementosNaLista))
+	#acho os divisores
+	divisor = list(divisores(qtdElementosNaLista))
 	
-	mdc = divisores[-1]
+	#acho o maior divisor
+	md = 0
 
-	if divisores[-1] == len(passwords):
+	if divisor[-1] == len(passwords):
 		try:
-			mdc = divisores[-2]	
+			md = divisor[-2]	
 		except Exception as e:
 			print (e)
 			print ("...")
@@ -81,13 +85,26 @@ def bruteforce(passwordlist):
 			print ("...")
 			print ("Exiting")
 			sys.exit(0)
-		
+	else:
+		md = divisor[-1]
+
 	print ()
-	print ("==========================[Começando]==========================")
+	print ("==========================[Dividindo e conquistando]==========================")
 	print ()
 
-	#quantidade de arrays a serem criados = 
-	#Dividir o array em array menores
+	#separo a lista em n listas, onde n = maior divisor
+	print (md)
+	splited = [passwords[i::md] for i in range(md)]
+
+	nmrThreads = 4
+
+	#Preciso que dividir em uma quantidade exata de array pra cada Thread
+
+	#print (splited)
+	'''
+	print (str(splited[0][0]))
+	'''
+
 bruteforce('pwd-list.txt')
 '''
 int(len(passwords))
