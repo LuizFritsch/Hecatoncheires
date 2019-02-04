@@ -11,7 +11,6 @@
   * -t = target (ip do seu roteador, para acha-lo, execute ipconfig no win ou ifconfig no linux, e procure por gateway padrão)
   * -a = numero de threads
   
-  e.g.: python cracker.py -p pwd-list.txt -u admin - t 192.168.0.1 -a 4
   
 ## Siga estes passos para executar o Router Cracker:
 
