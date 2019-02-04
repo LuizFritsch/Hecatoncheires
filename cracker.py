@@ -125,9 +125,20 @@ try:
 	
 	args = parser.parse_args()
 	
-	target = args.target
-	username = args.username
-	qtdThreads = int(args.threads)
+	try:
+	
+		target = args.target
+		sername = args.username
+		qtdThreads = int(args.threads)	
+	
+	except Exception as e:
+	
+		print(e)
+	
+		print ("Voce nao passou todos argumentos necessarios ou eles estão errados, por favor, execute novamente...")
+	
+		sys.exit(0)
+	
 
 	#Le o arquivo de senhas
 	fd = open(args.passlist, 'r')
@@ -194,6 +205,8 @@ try:
 		separador = separador + qtd
 		
 		qtd = qtd + qtd
+
+
 	
 	for i in range(0,qtdThreads):
 		
@@ -207,7 +220,7 @@ try:
 	    t.join()
 	 
 	
-	print ("Saindo da main")
+	print ("Finalizando execução")
 
 except Exception as e:
 
