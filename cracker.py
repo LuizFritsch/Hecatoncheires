@@ -62,7 +62,6 @@ def usage():
 	print ()
 	print ()
 	print ()
-	sys.exit(0)
 
 def bruteforce(target, passwords, username):
 	
