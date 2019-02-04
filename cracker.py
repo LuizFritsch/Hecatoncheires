@@ -81,8 +81,10 @@ def bruteforce(target, passwords, username):
 				CRACKED_PASSWORD = password
 				print ()
 				print ()
+			elif (code == 407) :
+				pass
 			else:
-				pass	
+				print ("Password not found")	
 
 	except Exception as e:
 		print (e)
