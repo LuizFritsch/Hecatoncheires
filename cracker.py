@@ -39,10 +39,25 @@ __GITHUB__  =   "https://github.com/luizfritsch"
 
 CRACKED_PASSWORD = None
 
+def divisores(num):
+    for i in range(1, int(num/2+1)):
+        if num % i == 0: 
+           yield i
+    yield num
+
 def usage():
-	print ("Usage: python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist] -a [QTD DE THREADS]")
+	print ()
+	print ()
+	print ()
+	print ()
+	print ()
+	print ()
+	print ()
+	print ("Usage: ")
+	print ("python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist] -a [QTD DE THREADS]")
 	print ("")
-	print ("Example: python cracker.py -t 192.168.0.1 -u admin -p passwordlist.txt -a 4")
+	print ("Example: ") 
+	print ("python cracker.py -t 192.168.0.1 -u admin -p passwordlist.txt -a 4")
 
 def bruteforce(target, passwords, username):
 	try:
@@ -76,25 +91,23 @@ def bruteforce(target, passwords, username):
 
 try:
 	global target
-    global passlist
-    global username
+	global passlist
+	global username
+	target = ''
+	passlist = ''
+	username = ''
 
-    target = ''
-    passlist = ''
-    username = ''
-
-    #Faz o parsing dos argumentos
-    parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
-    parser.add_argument('-h', '--help', action=usage(), help='usage')
-    parser.add_argument('-t', '--target',help='Informe o ip do roteador alvo')
-    parser.add_argument('-p', '--passlist',help='Informe a lista de senhas')
-    parser.add_argument('-u','--username',help='Informe o usuário')
+	#Faz o parsing dos argumentos
+	parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
+	parser.add_argument('-h', '--help', action=usage(), help='usage')
+	parser.add_argument('-t', '--target',help='Informe o ip do roteador alvo')
+	parser.add_argument('-p', '--passlist',help='Informe a lista de senhas')
+	parser.add_argument('-u','--username',help='Informe o usuário')
 	parser.add_argument('-a','--threads',help='Informe a quantidade de threads')
-    args = parser.parse_args()
-
-    target = args.target
-    username = args.username
-    qtdThreads = args.threads
+	args = parser.parse_args()
+	target = args.target
+	username = args.username
+	qtdThreads = int(args.threads)
 
 	#Le o arquivo de senha
 	fd = open(args.passlist, 'r')
@@ -139,17 +152,18 @@ try:
 	#print (md)
 	splited = [passwords[i::md] for i in range(md)]
 
-	qtd = int(int(qtdElementosNaLista)/qtdThreads)
+	qtd = int(int(qtdElementosNaLista)/int(qtdThreads))
 
 	#Preciso agora dividir em uma quantidade exata de arrays pra cada Thread	
 
 	separador = 0
 	threads = []
-	for i in range(1,qtdThreads):
+	for i in range(0,qtdThreads):
 		arrays = passwords[separador:qtd]
 		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username])
-
-	for i in range(1,qtdThreads):
+		separador = separador + qtd
+		qtd = qtd + qtd
+	for i in range(0,qtdThreads):
 		locals()['thread%d' % i].start()
 		threads.append(locals()['thread%d' % i])
 
@@ -159,4 +173,4 @@ try:
 	 
 	print ("Saindo da main")
 except Exception as e:
-	print e
+	print (e)
