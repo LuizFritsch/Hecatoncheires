@@ -1,5 +1,25 @@
 # Router Cracker
 
+English:
+## Args:
+  * -p = path/password list 
+  * -u = username
+  * -t = target (router's ip)
+  * -a = number of threads
+  
+## Installation:
+You must have python 3, a password list of any size and requests and argparse modules.
+1. Clone this repo:
+```console
+WhoAmI@wHOamI:~$ git clone https://github.com/LuizFritsch/router-cracker.git
+```
+2. Access the repo directory and run it. e.g.:
+```console
+WhoAmI@wHOamI:~$ python cracker.py -p pwd-list.txt -u admin -t 192.168.0.1 -a 4
+```
+
+
+Português:
 ## Pré requisitos:
 * Python 3
 * Lista de senhas
