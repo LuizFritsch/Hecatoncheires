@@ -10,11 +10,15 @@ Router cracker is an easy http/https multithreaded password cracker.
   
 ## Installation:
 You must have python 3, a password list of any size and requests and argparse modules.
-1. Clone this repo:
+1. Install dependencies:
+```console
+pip install requests argparse threading time sys
+```
+2. Clone this repo:
 ```console
 WhoAmI@wHOamI:~$ git clone https://github.com/LuizFritsch/router-cracker.git
 ```
-2. Access the repo directory and run it. e.g.:
+3. Access the repo directory and run it. e.g.:
 ```console
 WhoAmI@wHOamI:~$ python cracker.py -p pwd-list.txt -u admin -t 192.168.0.1 -a 4
 ```
@@ -23,7 +27,7 @@ WhoAmI@wHOamI:~$ python cracker.py -p pwd-list.txt -u admin -t 192.168.0.1 -a 4
 ## Pré requisitos:
 * Python 3
 * Lista de senhas
-* Bibliotecas: requests, sys e argparse
+* Bibliotecas: requests, sys, argparse, time & threading
 
 ## Argumentos:
   * -p = diretorio/nome do arquivo contendo as senhas
