@@ -1,5 +1,6 @@
-# Router Cracker
-Router cracker is an easy http/https multithreaded password cracker.
+# Password Cracker
+Password cracker is an easy http/https multithreaded password cracker.
+This APP was created in order to bypass the router that my internet provider gave me. However, it can be use to bruteforce anything connected to internet.
 
 
 ## Args:
