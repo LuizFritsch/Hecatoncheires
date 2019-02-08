@@ -39,13 +39,6 @@ __GITHUB__  =   "https://github.com/luizfritsch"
 
 CRACKED_PASSWORD = None
 
-#	Get the max divider from password list's size
-def divider(listSize):
-    for counter in range(1, int(listSize/2+1)):
-        if listSize % counter == 0: 
-           yield counter
-    yield listSize
-
 def usage():
 	print ("")
 	print ("")
