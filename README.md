@@ -1,6 +1,7 @@
 # Router Cracker
+Router cracker is an easy http/https multithreaded password cracker.
 
-English:
+
 ## Args:
   * -p = path/password list 
   * -u = username
@@ -19,7 +20,6 @@ WhoAmI@wHOamI:~$ python cracker.py -p pwd-list.txt -u admin -t 192.168.0.1 -a 4
 ```
 
 
-Português:
 ## Pré requisitos:
 * Python 3
 * Lista de senhas
