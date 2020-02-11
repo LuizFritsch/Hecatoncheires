@@ -111,8 +111,7 @@ try:
 	target = ''
 	passlist = ''
 	username = ''
-
-	#Faz o parsing dos argumentos
+	
 	parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
 	parser.add_argument('-h', '--help', action=usage(), help='usage')
 	parser.add_argument('-t', '--target',help='routers ip')
@@ -138,14 +137,11 @@ try:
 
 		sys.exit(0)
 	
-
-	#Le o arquivo de senhas
+	
 	fd = open(args.passlist, 'r')
 		
-	#Salva numa lista
 	passwords = fd.readlines()
-
-	#Pega a quantidade de elementos que tem na lista de senhas
+	
 	listLength = len(passwords)
 
 	print ("")
@@ -172,7 +168,7 @@ try:
 		
 		locals()['thread%d' % i].start()
 		
-		print ("Thread ",i," foi startada")
+		print ("Thread ",i," was started")
 
 		threads.append(locals()['thread%d' % i])
 
