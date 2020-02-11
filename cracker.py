@@ -92,7 +92,7 @@ def bruteforce(target, passwords, username, threadID):
 			elif (code == 403) :
 				time.sleep(5)
 			else:
-				print ("Erro.: ",code)
+				print ("Error.: ",code)
 				print ("")
 				print ("Password not found")
 				sys.exit(0)
@@ -141,7 +141,7 @@ try:
 	fd = open(args.passlist, 'r')
 		
 	passwords = fd.readlines()
-	
+
 	listLength = len(passwords)
 
 	print ("")
@@ -168,7 +168,9 @@ try:
 		
 		locals()['thread%d' % i].start()
 		
-		print ("Thread ",i," was started")
+
+		print ("Thread ",i," was started...")
+    
 
 		threads.append(locals()['thread%d' % i])
 
