@@ -111,8 +111,7 @@ try:
 	target = ''
 	passlist = ''
 	username = ''
-
-	#Faz o parsing dos argumentos
+	
 	parser = argparse.ArgumentParser(description = "Router Cracker", add_help = False)
 	parser.add_argument('-h', '--help', action=usage(), help='usage')
 	parser.add_argument('-t', '--target',help='routers ip')
@@ -138,7 +137,7 @@ try:
 
 		sys.exit(0)
 	
-
+	
 	fd = open(args.passlist, 'r')
 		
 	passwords = fd.readlines()
@@ -169,7 +168,9 @@ try:
 		
 		locals()['thread%d' % i].start()
 		
+
 		print ("Thread ",i," was started...")
+    
 
 		threads.append(locals()['thread%d' % i])
 
